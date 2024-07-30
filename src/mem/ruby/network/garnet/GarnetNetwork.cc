@@ -528,6 +528,12 @@ GarnetNetwork::regStats()
             statistics::oneline)
         ;
 
+    m_reception_rate
+        .name(name() + ".reception_rate")
+        .precision(6);
+    // m_reception_rate = sum(m_packets_received)/
+    //m_routers.size() / int(curCycle());
+
     // Traffic distribution
     for (int source = 0; source < m_routers.size(); ++source) {
         m_data_traffic_distribution.push_back(
@@ -580,6 +586,17 @@ GarnetNetwork::collateStats()
     for (int i = 0; i < m_routers.size(); i++) {
         m_routers[i]->collateStats();
     }
+
+    m_reception_rate
+        .name(name() + ".reception_rate")
+        .precision(6);
+    // m_reception_rate =
+    //sum(m_packets_received)/ m_routers.size() / int(curCycle());
+    fprintf(stderr, "m_packets_received: %d\n", sum(m_packets_received));
+    fprintf(stderr, "m_nodes: %d\n", m_nodes);
+    fprintf(stderr, "n_router: %d\n", m_routers.size());
+    fprintf(stderr, "curCycle: %d\n", curCycle());
+    fprintf(stderr, "curTick: %d\n", curTick());
 }
 
 void
