@@ -105,15 +105,11 @@ class Cube(SimpleTopology):
         assert num_routers & (num_routers - 1) == 0, "Number of routers is not a power of 2"
         import math
         length = int(math.log(num_routers, 2))
-        assert length == 6
-        # def hamming_distance(a, b):
-        #     return bin(a ^ b).count('1')
 
         # Create the adjacent links
         for i in range(num_routers):
             for j in range(length):
                 dest = i ^ (1 << j)
-                assert j != 6 # 6 is the length of the cube
                 # most significant bit first
                 int_links.append(
                     IntLink(link_id=link_count, src_node=routers[i], dst_node=routers[dest], latency=link_latency, weight=1,

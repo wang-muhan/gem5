@@ -94,17 +94,22 @@ InputUnit::wakeup()
             set_vc_active(vc, curTick());
 
             // Route computation for this vc
-            // int outport = m_router->route_compute(t_flit->get_route(),
-            //     m_id, m_direction);
-
-            auto [outport, dor] = m_router->route_compute_dor(t_flit->get_route(),
+            RoutingAlgorithm routing_algorithm =
+                (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
+            if (routing_algorithm != CUSTOM_){
+                int outport = m_router->route_compute(t_flit->get_route(),
+                    m_id, m_direction);
+                // Update output port in VC
+                // All flits in this packet will use this output port
+                // The output port field in the flit is updated after it wins SA
+                grant_outport(vc, outport);
+            }
+            else{
+                auto [outport, dor] = m_router->route_compute_dor(t_flit->get_route(),
                 m_id, m_direction, t_flit->get_vc());
-
-            // Update output port in VC
-            // All flits in this packet will use this output port
-            // The output port field in the flit is updated after it wins SA
-            grant_outport(vc, outport);
-            grant_dor(vc, dor);
+                grant_outport(vc, outport);
+                grant_dor(vc, dor);
+            }
 
         } else {
             assert(virtualChannels[vc].get_state() == ACTIVE_);

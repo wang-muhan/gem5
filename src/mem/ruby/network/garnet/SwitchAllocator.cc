@@ -90,10 +90,18 @@ SwitchAllocator::init()
 void
 SwitchAllocator::wakeup()
 {
-    // arbitrate_inports(); // First stage of allocation
-    // arbitrate_outports(); // Second stage of allocation
+    RoutingAlgorithm routing_algorithm =
+                (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
+    
+    if (routing_algorithm != CUSTOM_){
+    arbitrate_inports(); // First stage of allocation
+    arbitrate_outports(); // Second stage of allocation
+    }
+
+    else{
     arbitrate_inports_dor(); // First stage of allocation
     arbitrate_outports_dor(); // Second stage of allocation
+    }
 
     clear_request_vector();
     check_for_wakeup();
@@ -543,7 +551,7 @@ SwitchAllocator::send_allowed_dor(int inport, int invc, int outport, int outvc, 
         switch(dor){
             case Dor_type::STARPLUS_:
                 for (int vc_offset = 0; vc_offset < m_vc_per_vnet; vc_offset++) {
-                    if (vc_offset == 1) continue;
+                    // if (vc_offset == 1) continue;
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&
@@ -553,7 +561,7 @@ SwitchAllocator::send_allowed_dor(int inport, int invc, int outport, int outvc, 
                 }
                 break;
             case Dor_type::STARMINUS_:
-                for (int vc_offset = 1; vc_offset < m_vc_per_vnet; vc_offset++) {
+                for (int vc_offset = 0; vc_offset < m_vc_per_vnet; vc_offset++) {
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&
@@ -563,7 +571,7 @@ SwitchAllocator::send_allowed_dor(int inport, int invc, int outport, int outvc, 
                 }
                 break;
             case Dor_type::COMMON_:
-                for (int vc_offset = 2; vc_offset < m_vc_per_vnet; vc_offset++) {
+                for (int vc_offset = 1; vc_offset < m_vc_per_vnet; vc_offset++) {
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&

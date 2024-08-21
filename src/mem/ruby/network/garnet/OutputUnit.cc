@@ -117,21 +117,21 @@ OutputUnit::has_free_vc_dor(int vnet, Dor_type dor)
     switch(dor){
         case Dor_type::STARPLUS_:
             for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
-                if (vc == vc_base+1) continue;
+                // if (vc == vc_base+1) continue;
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
             break;
 
         case Dor_type::STARMINUS_:
-            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
             break;
 
         case Dor_type::COMMON_:
-            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
@@ -174,7 +174,7 @@ OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
     switch(dor){
         case Dor_type::STARPLUS_:
             for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
-                if (vc == vc_base+1) continue;
+                // if (vc == vc_base+1) continue;
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;
@@ -183,7 +183,7 @@ OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
             break;
 
         case Dor_type::STARMINUS_:
-            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;
@@ -192,7 +192,7 @@ OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
             break;
 
         case Dor_type::COMMON_:
-            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;
