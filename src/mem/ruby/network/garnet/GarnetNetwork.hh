@@ -203,6 +203,7 @@ class GarnetNetwork : public Network
     std::vector<std::vector<statistics::Scalar *>> m_data_traffic_distribution;
     std::vector<std::vector<statistics::Scalar *>> m_ctrl_traffic_distribution;
 
+    statistics::Scalar m_total_cycles;
     statistics::Formula m_reception_rate;
 
   private:

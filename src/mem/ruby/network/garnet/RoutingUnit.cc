@@ -267,7 +267,21 @@ RoutingUnit::outportComputeCustom(RouteInfo route,
                                  int inport,
                                  PortDirection inport_dirn)
 {
-    panic("%s placeholder executed", __FUNCTION__);
+
+    int my_id = m_router->get_id();
+    int dest_id = route.dest_router;
+    
+    int difference = dest_id ^ my_id;
+    int diffence_bit = difference & -difference;
+    
+    int outport = 0;
+    while((diffence_bit & 1) == 0) {
+        diffence_bit >>= 1;
+        outport++;
+    }
+
+    PortDirection outport_dirn = std::to_string(outport);
+    return m_outports_dirn2idx[outport_dirn];
 }
 
 } // namespace garnet
