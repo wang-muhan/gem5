@@ -124,7 +124,7 @@ class Ring(SimpleTopology):
             link_count += 1
 
         network.ext_links = ext_links
-        
+
         # # Connect each node to the appropriate router
         # ext_links = []
         # for (i, n) in enumerate(self.nodes):

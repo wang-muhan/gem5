@@ -59,6 +59,9 @@ class VirtualChannel
     inline int get_outvc()                  { return m_output_vc; }
     void set_outport(int outport)           { m_output_port = outport; };
     inline int get_outport()                  { return m_output_port; }
+    //modified
+    void set_dor(Dor_type dor)           { m_dor = dor; }
+    inline Dor_type get_dor()                   { return m_dor; }
 
     inline Tick get_enqueue_time()          { return m_enqueue_time; }
     inline void set_enqueue_time(Tick time) { m_enqueue_time = time; }
@@ -104,6 +107,8 @@ class VirtualChannel
     int m_output_port;
     Tick m_enqueue_time;
     int m_output_vc;
+    // modified
+    Dor_type m_dor;
 };
 
 } // namespace garnet

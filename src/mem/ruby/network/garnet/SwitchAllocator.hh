@@ -63,8 +63,12 @@ class SwitchAllocator : public Consumer
     void print(std::ostream& out) const {};
     void arbitrate_inports();
     void arbitrate_outports();
+    void arbitrate_inports_dor();
+    void arbitrate_outports_dor();
     bool send_allowed(int inport, int invc, int outport, int outvc);
+    bool send_allowed_dor(int inport, int invc, int outport, int outvc, Dor_type dor);
     int vc_allocate(int outport, int inport, int invc);
+    int vc_allocate_dor(int outport, int inport, int invc, Dor_type dor);
 
     inline double
     get_input_arbiter_activity()

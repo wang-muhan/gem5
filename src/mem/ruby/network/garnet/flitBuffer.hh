@@ -63,6 +63,7 @@ class flitBuffer
     flit *
     getTopFlit()
     {
+        assert(!isEmpty());
         flit *f = m_buffer.front();
         m_buffer.pop_front();
         return f;
@@ -71,6 +72,7 @@ class flitBuffer
     flit *
     peekTopFlit()
     {
+        assert(!isEmpty());
         return m_buffer.front();
     }
 

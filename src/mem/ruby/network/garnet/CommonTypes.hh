@@ -52,6 +52,7 @@ enum flit_stage {I_, VA_, SA_, ST_, LT_, NUM_FLIT_STAGE_};
 enum link_type { EXT_IN_, EXT_OUT_, INT_, NUM_LINK_TYPES_ };
 enum RoutingAlgorithm { TABLE_ = 0, XY_ = 1, CUSTOM_ = 2,
                         NUM_ROUTING_ALGORITHM_};
+enum Dor_type { STARPLUS_ , STARMINUS_ , COMMON_, DEVICE_, NUM_DOR_TYPE_};
 
 struct RouteInfo
 {

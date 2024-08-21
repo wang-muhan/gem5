@@ -117,6 +117,7 @@ class Router : public BasicRouter, public Consumer
     PortDirection getInportDirection(int inport);
 
     int route_compute(RouteInfo route, int inport, PortDirection direction);
+    std::pair<int, Dor_type> route_compute_dor(RouteInfo route, int inport, PortDirection direction, int vc);
     void grant_switch(int inport, flit *t_flit);
     void schedule_wakeup(Cycles time);
 
@@ -141,6 +142,8 @@ class Router : public BasicRouter, public Consumer
 
     bool functionalRead(Packet *pkt, WriteMask &mask);
     uint32_t functionalWrite(Packet *);
+    SwitchAllocator* getSwitchAllocator() { return &switchAllocator; }
+    RoutingUnit* getRoutingUnit() { return &routingUnit; }
 
   private:
     Cycles m_latency;

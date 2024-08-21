@@ -57,6 +57,10 @@ class RoutingUnit
                       int inport,
                       PortDirection inport_dirn);
 
+    std::pair<int, Dor_type> outportCompute_dor(RouteInfo route,
+                      int inport,
+                      PortDirection inport_dirn, int invc);
+
     // Topology-agnostic Routing Table based routing (default)
     void addRoute(std::vector<NetDest>& routing_table_entry);
     void addWeight(int link_weight);
@@ -78,10 +82,24 @@ class RoutingUnit
                              int inport,
                              PortDirection inport_dirn);
 
+    std::pair<int, Dor_type> outportComputeCustom_dor(RouteInfo route,
+                             int inport,
+                             PortDirection inport_dirn, int invc);
+
     // Returns true if vnet is present in the vector
     // of vnets or if the vector supports all vnets.
     bool supportsVnet(int vnet, std::vector<int> sVnets);
 
+    //modified
+    void set_outport_used(int outport, bool used){
+        m_outport_used[outport] = used;
+    }
+    bool get_outport_used(int outport){
+      if (m_outport_used.find(outport) == m_outport_used.end()){
+        m_outport_used[outport] = false;
+      }
+        return m_outport_used[outport];
+    }
 
   private:
     Router *m_router;
@@ -95,6 +113,9 @@ class RoutingUnit
     std::map<int, PortDirection> m_inports_idx2dirn;
     std::map<int, PortDirection> m_outports_idx2dirn;
     std::map<PortDirection, int> m_outports_dirn2idx;
+
+    //modified
+    std::map<int, bool>  m_outport_used;
 };
 
 } // namespace garnet

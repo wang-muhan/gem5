@@ -615,7 +615,7 @@ GarnetNetwork::collateStats()
     m_total_cycles.name(name() + ".total_cycles")
     .unit(statistics::units::Cycle::get());
     m_total_cycles = cycle_delta;
-    
+
 }
 
 void

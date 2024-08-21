@@ -106,6 +106,50 @@ OutputUnit::has_free_vc(int vnet)
     return false;
 }
 
+bool
+OutputUnit::has_free_vc_dor(int vnet, Dor_type dor)
+{
+    int vc_base = vnet*m_vc_per_vnet;
+
+
+    // Vc0 for starplus, vc1 for starminus, vc3-vcn for all, arbitary for device
+    
+    switch(dor){
+        case Dor_type::STARPLUS_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (vc == vc_base+1) continue;
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+
+        case Dor_type::STARMINUS_:
+            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+
+        case Dor_type::COMMON_:
+            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+
+        case Dor_type::DEVICE_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+        default:
+            panic("Invalid dor type\n");
+    }
+
+    return false;
+}
+
 // Assign a free output VC to the winner of Switch Allocation
 int
 OutputUnit::select_free_vc(int vnet)
@@ -116,6 +160,56 @@ OutputUnit::select_free_vc(int vnet)
             outVcState[vc].setState(ACTIVE_, curTick());
             return vc;
         }
+    }
+
+    return -1;
+}
+
+int
+OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
+{
+    int vc_base = vnet*m_vc_per_vnet;
+    
+    // Vc0 for starplus, vc1 for starminus, vc3-vcn for all, arbitary for device
+    switch(dor){
+        case Dor_type::STARPLUS_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (vc == vc_base+1) continue;
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Dor_type::STARMINUS_:
+            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Dor_type::COMMON_:
+            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Dor_type::DEVICE_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+        default:
+            panic("Invalid dor type\n");
     }
 
     return -1;

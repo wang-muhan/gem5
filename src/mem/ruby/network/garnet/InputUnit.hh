@@ -80,6 +80,13 @@ class InputUnit : public Consumer
     {
         virtualChannels[vc].set_outport(outport);
     }
+    
+    //modified
+    inline void
+    grant_dor(int vc, Dor_type dor)
+    {
+        virtualChannels[vc].set_dor(dor);
+    }
 
     inline void
     grant_outvc(int vc, int outvc)
@@ -91,6 +98,13 @@ class InputUnit : public Consumer
     get_outport(int invc)
     {
         return virtualChannels[invc].get_outport();
+    }
+
+    //modified
+    inline Dor_type
+    get_dor(int invc)
+    {
+        return virtualChannels[invc].get_dor();
     }
 
     inline int
