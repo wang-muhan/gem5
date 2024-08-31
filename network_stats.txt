@@ -1,8 +1,289 @@
 
-packets_injected = 162275                       (Count)
-packets_received = 160111                       (Count)
-average_packet_queueing_latency = 2669170.313095                       ((Tick/Count))
-average_packet_network_latency = 108065.735646                       ((Tick/Count))
-average_packet_latency = 2777236.048741                       ((Tick/Count))
-average_hops = 5.978265                       (Ratio)
-reception_rate = 0.062543                       ((Count/Cycle))
+shuffle_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639739                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4505.440500                       ((Tick/Count))
+average_packet_latency = 5505.440500                       ((Tick/Count))
+average_hops = 3.000699                       (Ratio)
+reception_rate = 0.099959                       ((Count/Cycle))
+shuffle_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278519                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4511.582151                       ((Tick/Count))
+average_packet_latency = 5511.582151                       ((Tick/Count))
+average_hops = 3.000431                       (Ratio)
+reception_rate = 0.199769                       ((Count/Cycle))
+shuffle_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197898                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4540.217668                       ((Tick/Count))
+average_packet_latency = 5540.217668                       ((Tick/Count))
+average_hops = 2.999711                       (Ratio)
+reception_rate = 0.499672                       ((Count/Cycle))
+shuffle_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393266                       (Count)
+average_packet_queueing_latency = 1000.000469                       ((Tick/Count))
+average_packet_network_latency = 4623.799401                       ((Tick/Count))
+average_packet_latency = 5623.799870                       ((Tick/Count))
+average_hops = 2.999991                       (Ratio)
+reception_rate = 0.998948                       ((Count/Cycle))
+transpose_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639742                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4507.707795                       ((Tick/Count))
+average_packet_latency = 5507.707795                       ((Tick/Count))
+average_hops = 3.003017                       (Ratio)
+reception_rate = 0.099960                       ((Count/Cycle))
+transpose_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278528                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4508.101113                       ((Tick/Count))
+average_packet_latency = 5508.101113                       ((Tick/Count))
+average_hops = 2.999313                       (Ratio)
+reception_rate = 0.199770                       ((Count/Cycle))
+transpose_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197897                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4515.289110                       ((Tick/Count))
+average_packet_latency = 5515.289110                       ((Tick/Count))
+average_hops = 2.998442                       (Ratio)
+reception_rate = 0.499671                       ((Count/Cycle))
+transpose_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393266                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4517.705113                       ((Tick/Count))
+average_packet_latency = 5517.705113                       ((Tick/Count))
+average_hops = 2.999941                       (Ratio)
+reception_rate = 0.998948                       ((Count/Cycle))
+tornado_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639744                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3751.509979                       ((Tick/Count))
+average_packet_latency = 4751.509979                       ((Tick/Count))
+average_hops = 2.249944                       (Ratio)
+reception_rate = 0.099960                       ((Count/Cycle))
+tornado_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278533                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3755.987917                       ((Tick/Count))
+average_packet_latency = 4755.987917                       ((Tick/Count))
+average_hops = 2.249819                       (Ratio)
+reception_rate = 0.199771                       ((Count/Cycle))
+tornado_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197920                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3787.613199                       ((Tick/Count))
+average_packet_latency = 4787.613199                       ((Tick/Count))
+average_hops = 2.249801                       (Ratio)
+reception_rate = 0.499675                       ((Count/Cycle))
+tornado_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393314                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3922.500600                       ((Tick/Count))
+average_packet_latency = 4922.500600                       ((Tick/Count))
+average_hops = 2.249999                       (Ratio)
+reception_rate = 0.998955                       ((Count/Cycle))
+neighbor_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639743                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3250.807746                       ((Tick/Count))
+average_packet_latency = 4250.807746                       ((Tick/Count))
+average_hops = 1.749937                       (Ratio)
+reception_rate = 0.099960                       ((Count/Cycle))
+neighbor_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278533                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3254.008696                       ((Tick/Count))
+average_packet_latency = 4254.008696                       ((Tick/Count))
+average_hops = 1.750465                       (Ratio)
+reception_rate = 0.199771                       ((Count/Cycle))
+neighbor_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197928                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3270.082378                       ((Tick/Count))
+average_packet_latency = 4270.082378                       ((Tick/Count))
+average_hops = 1.750361                       (Ratio)
+reception_rate = 0.499676                       ((Count/Cycle))
+neighbor_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393347                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 3312.491407                       ((Tick/Count))
+average_packet_latency = 4312.491407                       ((Tick/Count))
+average_hops = 1.750005                       (Ratio)
+reception_rate = 0.998960                       ((Count/Cycle))
+uniform_random_inj0.1
+======================
+packets_injected = 638983                       (Count)
+packets_received = 638956                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4532.288608                       ((Tick/Count))
+average_packet_latency = 5532.288608                       ((Tick/Count))
+average_hops = 3.001509                       (Ratio)
+reception_rate = 0.099837                       ((Count/Cycle))
+uniform_random_inj0.2
+======================
+packets_injected = 1278553                       (Count)
+packets_received = 1278490                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4565.050176                       ((Tick/Count))
+average_packet_latency = 5565.050176                       ((Tick/Count))
+average_hops = 3.002083                       (Ratio)
+reception_rate = 0.199764                       ((Count/Cycle))
+uniform_random_inj0.5
+======================
+packets_injected = 3198242                       (Count)
+packets_received = 3198080                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4668.785177                       ((Tick/Count))
+average_packet_latency = 5668.785177                       ((Tick/Count))
+average_hops = 3.000029                       (Ratio)
+reception_rate = 0.499700                       ((Count/Cycle))
+uniform_random_inj1.0
+======================
+packets_injected = 6393561                       (Count)
+packets_received = 6393208                       (Count)
+average_packet_queueing_latency = 1000.018926                       ((Tick/Count))
+average_packet_network_latency = 4955.762428                       ((Tick/Count))
+average_packet_latency = 5955.781354                       ((Tick/Count))
+average_hops = 2.999576                       (Ratio)
+reception_rate = 0.998939                       ((Count/Cycle))
+bit_complement_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639713                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 7503.817337                       ((Tick/Count))
+average_packet_latency = 8503.817337                       ((Tick/Count))
+average_hops = 6                       (Ratio)
+reception_rate = 0.099955                       ((Count/Cycle))
+bit_complement_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278480                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 7515.329141                       ((Tick/Count))
+average_packet_latency = 8515.329141                       ((Tick/Count))
+average_hops = 6                       (Ratio)
+reception_rate = 0.199763                       ((Count/Cycle))
+bit_complement_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197807                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 7604.534920                       ((Tick/Count))
+average_packet_latency = 8604.534920                       ((Tick/Count))
+average_hops = 6                       (Ratio)
+reception_rate = 0.499657                       ((Count/Cycle))
+bit_complement_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393025                       (Count)
+average_packet_queueing_latency = 1000.067965                       ((Tick/Count))
+average_packet_network_latency = 8601.966987                       ((Tick/Count))
+average_packet_latency = 9602.034952                       ((Tick/Count))
+average_hops = 6                       (Ratio)
+reception_rate = 0.998910                       ((Count/Cycle))
+bit_reverse_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639740                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4508.158783                       ((Tick/Count))
+average_packet_latency = 5508.158783                       ((Tick/Count))
+average_hops = 3.003480                       (Ratio)
+reception_rate = 0.099959                       ((Count/Cycle))
+bit_reverse_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278521                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4510.151182                       ((Tick/Count))
+average_packet_latency = 5510.151182                       ((Tick/Count))
+average_hops = 3.001379                       (Ratio)
+reception_rate = 0.199769                       ((Count/Cycle))
+bit_reverse_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197892                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4516.190822                       ((Tick/Count))
+average_packet_latency = 5516.190822                       ((Tick/Count))
+average_hops = 2.999275                       (Ratio)
+reception_rate = 0.499671                       ((Count/Cycle))
+bit_reverse_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393267                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4517.401745                       ((Tick/Count))
+average_packet_latency = 5517.401745                       ((Tick/Count))
+average_hops = 2.999950                       (Ratio)
+reception_rate = 0.998948                       ((Count/Cycle))
+bit_rotation_inj0.1
+======================
+packets_injected = 639763                       (Count)
+packets_received = 639739                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4517.546218                       ((Tick/Count))
+average_packet_latency = 5517.546218                       ((Tick/Count))
+average_hops = 3.000699                       (Ratio)
+reception_rate = 0.099959                       ((Count/Cycle))
+bit_rotation_inj0.2
+======================
+packets_injected = 1278577                       (Count)
+packets_received = 1278519                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4534.884112                       ((Tick/Count))
+average_packet_latency = 5534.884112                       ((Tick/Count))
+average_hops = 3.000431                       (Ratio)
+reception_rate = 0.199769                       ((Count/Cycle))
+bit_rotation_inj0.5
+======================
+packets_injected = 3198054                       (Count)
+packets_received = 3197898                       (Count)
+average_packet_queueing_latency = 1000                       ((Tick/Count))
+average_packet_network_latency = 4594.747863                       ((Tick/Count))
+average_packet_latency = 5594.747863                       ((Tick/Count))
+average_hops = 2.999711                       (Ratio)
+reception_rate = 0.499672                       ((Count/Cycle))
+bit_rotation_inj1.0
+======================
+packets_injected = 6393587                       (Count)
+packets_received = 6393259                       (Count)
+average_packet_queueing_latency = 1000.004067                       ((Tick/Count))
+average_packet_network_latency = 4766.745255                       ((Tick/Count))
+average_packet_latency = 5766.749321                       ((Tick/Count))
+average_hops = 2.999990                       (Ratio)
+reception_rate = 0.998947                       ((Count/Cycle))

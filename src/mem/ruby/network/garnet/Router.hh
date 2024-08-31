@@ -118,6 +118,7 @@ class Router : public BasicRouter, public Consumer
 
     int route_compute(RouteInfo route, int inport, PortDirection direction);
     std::pair<int, Dor_type> route_compute_dor(RouteInfo route, int inport, PortDirection direction, int vc);
+    std::pair<int, std::pair< Star_type, bool > > route_compute_star(RouteInfo route, int inport, PortDirection direction, int vc);
     void grant_switch(int inport, flit *t_flit);
     void schedule_wakeup(Cycles time);
 

@@ -61,7 +61,11 @@ class VirtualChannel
     inline int get_outport()                  { return m_output_port; }
     //modified
     void set_dor(Dor_type dor)           { m_dor = dor; }
+    void set_star(Star_type star)          {m_star = star;}
+    void set_is_wrapped(bool is_wrapped)   {m_is_wrapped = is_wrapped;}
     inline Dor_type get_dor()                   { return m_dor; }
+    inline Star_type get_star()          {return m_star;}
+    inline bool get_is_wrapped()         {return m_is_wrapped;}
 
     inline Tick get_enqueue_time()          { return m_enqueue_time; }
     inline void set_enqueue_time(Tick time) { m_enqueue_time = time; }
@@ -109,6 +113,8 @@ class VirtualChannel
     int m_output_vc;
     // modified
     Dor_type m_dor;
+    Star_type m_star;
+    bool m_is_wrapped;
 };
 
 } // namespace garnet

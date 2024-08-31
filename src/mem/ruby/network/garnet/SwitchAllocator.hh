@@ -65,10 +65,14 @@ class SwitchAllocator : public Consumer
     void arbitrate_outports();
     void arbitrate_inports_dor();
     void arbitrate_outports_dor();
+    void arbitrate_inports_star();
+    void arbitrate_outports_star();
     bool send_allowed(int inport, int invc, int outport, int outvc);
     bool send_allowed_dor(int inport, int invc, int outport, int outvc, Dor_type dor);
+    bool send_allowed_star(int inport, int invc, int outport, int outvc, Star_type star);
     int vc_allocate(int outport, int inport, int invc);
     int vc_allocate_dor(int outport, int inport, int invc, Dor_type dor);
+    int vc_allocate_star(int outport, int inport, int invc, Star_type star);
 
     inline double
     get_input_arbiter_activity()

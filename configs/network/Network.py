@@ -48,6 +48,18 @@ def define_options(parser):
         help="the number of rows in the mesh topology",
     )
     parser.add_argument(
+        "--num-dim",
+        type=int,
+        default=2,
+        help="the number of dimensions in the torus tology",
+    )
+    parser.add_argument(
+        "--num-ary",
+        type=int,
+        default=2,
+        help="the number of ary in the torus tology",
+    )
+    parser.add_argument(
         "--network",
         default="simple",
         choices=["simple", "garnet"],
@@ -165,6 +177,8 @@ def init_network(options, network, InterfaceClass):
 
     if options.network == "garnet":
         network.num_rows = options.mesh_rows
+        network.num_dim = options.num_dim
+        network.num_ary = options.num_ary
         network.vcs_per_vnet = options.vcs_per_vnet
         network.ni_flit_size = options.link_width_bits / 8
         network.routing_algorithm = options.routing_algorithm

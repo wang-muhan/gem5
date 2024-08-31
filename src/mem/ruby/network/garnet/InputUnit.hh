@@ -89,6 +89,17 @@ class InputUnit : public Consumer
     }
 
     inline void
+    grant_star(int vc, Star_type star){
+        // std::cout<<star<<std::endl;
+        virtualChannels[vc].set_star(star);
+    }
+
+    inline void
+    grant_is_wrapped(int vc, int is_wrapped){
+        virtualChannels[vc].set_is_wrapped(is_wrapped);
+    }
+
+    inline void
     grant_outvc(int vc, int outvc)
     {
         virtualChannels[vc].set_outvc(outvc);
@@ -105,6 +116,16 @@ class InputUnit : public Consumer
     get_dor(int invc)
     {
         return virtualChannels[invc].get_dor();
+    }
+
+    inline Star_type
+    get_star(int invc)
+    {
+        return virtualChannels[invc].get_star();
+    }
+
+    inline bool get_is_wrapped(int invc){
+        return virtualChannels[invc].get_is_wrapped();
     }
 
     inline int

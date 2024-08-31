@@ -150,6 +150,50 @@ OutputUnit::has_free_vc_dor(int vnet, Dor_type dor)
     return false;
 }
 
+bool
+OutputUnit::has_free_vc_star(int vnet, Star_type star)
+{
+    int vc_base = vnet*m_vc_per_vnet;
+    assert(m_vc_per_vnet >= 2);
+
+
+    // Vc0 for star0, vc1 for star1, vc2-vcn for nonstar, arbitary for device
+    
+    switch(star){
+        case Star_type::STAR0_:
+            for (int vc = vc_base; vc < vc_base+1; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+
+        case Star_type::STAR1_:
+            for (int vc = vc_base+1; vc < vc_base+2; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+
+        case Star_type::NONSTAR_:
+            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+        case Star_type::STARDEVICE_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick()))
+                    return true;
+            }
+            break;
+        default:
+            // std::cout<<Star_type::STAR0_<<' '<<Star_type::STAR1_<<' '<<Star_type::NONSTAR_<<' '<<Star_type::STARDEVICE_<<' '<<star<<std::endl;
+            panic("Invalid star type\n");
+    }
+
+    return false;
+}
+
 // Assign a free output VC to the winner of Switch Allocation
 int
 OutputUnit::select_free_vc(int vnet)
@@ -208,6 +252,58 @@ OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
                 }
             }
             break;
+        default:
+            panic("Invalid dor type\n");
+    }
+
+    return -1;
+}
+
+int
+OutputUnit::select_free_vc_star(int vnet, Star_type star)
+{
+    int vc_base = vnet*m_vc_per_vnet;
+    assert(m_vc_per_vnet >= 2);
+
+    // Vc0 for starplus, vc1 for starminus, vc3-vcn for all, arbitary for device
+    switch(star){
+        case Star_type::STAR0_:
+            for (int vc = vc_base; vc < vc_base+1; vc++) {
+                // if (vc == vc_base+1) continue;
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Star_type::STAR1_:
+            for (int vc = vc_base+1; vc < vc_base+2; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Star_type::NONSTAR_:
+            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
+        case Star_type::STARDEVICE_:
+            for (int vc = vc_base; vc < vc_base + m_vc_per_vnet; vc++) {
+                if (is_vc_idle(vc, curTick())) {
+                    outVcState[vc].setState(ACTIVE_, curTick());
+                    return vc;
+                }
+            }
+            break;
+
         default:
             panic("Invalid dor type\n");
     }

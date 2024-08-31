@@ -74,6 +74,7 @@ class flit
     void set_outport(int port) { m_outport = port; }
     void set_time(Tick time) { m_time = time; }
     void set_vc(int vc) { m_vc = vc; }
+    void set_is_wrapped(int dim) {m_route.have_wrapped.insert(dim);}
     void set_route(RouteInfo route) { m_route = route; }
     void set_src_delay(Tick delay) { src_delay = delay; }
     void set_dequeue_time(Tick time) { m_dequeue_time = time; }

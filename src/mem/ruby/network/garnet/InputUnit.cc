@@ -96,13 +96,31 @@ InputUnit::wakeup()
             // Route computation for this vc
             RoutingAlgorithm routing_algorithm =
                 (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
-            if (routing_algorithm != CUSTOM_){
+            if (routing_algorithm != CUSTOM_ && routing_algorithm != DOR_ && routing_algorithm != RANDOM_DIMENSION_ && routing_algorithm != STAR_CHANNEL_){
                 int outport = m_router->route_compute(t_flit->get_route(),
                     m_id, m_direction);
                 // Update output port in VC
                 // All flits in this packet will use this output port
                 // The output port field in the flit is updated after it wins SA
                 grant_outport(vc, outport);
+            }
+            else if (routing_algorithm == STAR_CHANNEL_){
+                // auto [outport, auto[star, is_wrapped]] 
+                puts("!!!!!!!!!!!!!!!!!!!!!!!!!");
+                std::pair<int, std::pair<Star_type, bool > > result= m_router->route_compute_star(t_flit->get_route(),
+                m_id, m_direction, t_flit->get_vc());
+                int outport = result.first; Star_type star = result.second.first; bool is_wrapped = result.second.second;
+                grant_outport(vc, outport);
+                grant_star(vc,star);
+                if(!is_wrapped)grant_is_wrapped(vc,-1); // 不是
+                else{
+                    std::stringstream ss(m_router->getRoutingUnit()->m_outports_idx2dirn[outport]);
+                    std::string prefix;
+                    int dim;
+                    ss >> prefix; // 读取 "plus" 或 "minus"
+                    ss >> dim; // 读取数字部分
+                    grant_is_wrapped(vc,dim);
+                }
             }
             else{
                 auto [outport, dor] = m_router->route_compute_dor(t_flit->get_route(),

@@ -65,6 +65,9 @@ GarnetNetwork::GarnetNetwork(const Params &p)
     : Network(p)
 {
     m_num_rows = p.num_rows;
+    m_num_dim = p.num_dim;
+    m_num_ary = p.num_ary;
+    // std::cout<<"p.num_ary"<<p.num_ary<<std::endl;
     m_ni_flit_size = p.ni_flit_size;
     m_max_vcs_per_vnet = 0;
     m_buffers_per_data_vc = p.buffers_per_data_vc;

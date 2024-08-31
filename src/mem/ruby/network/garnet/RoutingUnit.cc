@@ -187,6 +187,7 @@ RoutingUnit::outportCompute(RouteInfo route, int inport,
     RoutingAlgorithm routing_algorithm =
         (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
 
+    assert(routing_algorithm != CUSTOM_ && routing_algorithm != DOR_ && routing_algorithm != RANDOM_DIMENSION_);
     switch (routing_algorithm) {
         case TABLE_:  outport =
             lookupRoutingTable(route.vnet, route.net_dest); break;
@@ -224,7 +225,7 @@ RoutingUnit::outportCompute_dor(RouteInfo route, int inport,
     RoutingAlgorithm routing_algorithm =
         (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
 
-    assert(routing_algorithm == CUSTOM_);
+    assert(routing_algorithm == CUSTOM_ || routing_algorithm == DOR_ || routing_algorithm == RANDOM_DIMENSION_);
 
     switch (routing_algorithm) {
         case TABLE_:  outport =
@@ -234,12 +235,43 @@ RoutingUnit::outportCompute_dor(RouteInfo route, int inport,
         // any custom algorithm
         case CUSTOM_: std::tie(outport, Dor) =
             outportComputeCustom_dor(route, inport, inport_dirn, invc); break;
+        case DOR_: std::tie(outport, Dor) =
+            outportComputeCustom_trivial_dor(route, inport, inport_dirn, invc); break;
+        case RANDOM_DIMENSION_: std::tie(outport, Dor) =
+            outportComputeCustom_random_dimension(route, inport, inport_dirn, invc); break;
         default: outport =
             lookupRoutingTable(route.vnet, route.net_dest); break;
     }
 
     assert(outport != -1);
     return std::make_pair(outport, Dor);
+}
+
+std::pair<int, std::pair<Star_type, bool > >
+RoutingUnit::outportCompute_star(RouteInfo route, int inport,
+                            PortDirection inport_dirn, int invc)
+{
+    int outport = -1;
+    Star_type Star;
+
+    if (route.dest_router == m_router->get_id()) {
+
+        // Multiple NIs may be connected to this router,
+        // all with output port direction = "Local"
+        // Get exact outport id from table
+        outport = lookupRoutingTable(route.vnet, route.net_dest);
+        return std::make_pair(outport, std::make_pair(STARDEVICE_,false));
+    }
+
+    // Routing Algorithm set in GarnetNetwork.py
+    // Can be over-ridden from command line using --routing-algorithm = 1
+    RoutingAlgorithm routing_algorithm =
+        (RoutingAlgorithm) m_router->get_net_ptr()->getRoutingAlgorithm();
+
+    assert(routing_algorithm == STAR_CHANNEL_);
+    std::pair<int, std::pair<Star_type, bool > > result = outportComputeStarChannel_star(route, inport, inport_dirn, invc);
+    assert(result.first != -1);//outport
+    return result;
 }
 
 // XY routing implemented using port directions
@@ -348,7 +380,7 @@ RoutingUnit::outportComputeCustom_dor(RouteInfo route,
     int outport;
     Dor_type Dor;
 
-    auto switch_allocator = m_router->getSwitchAllocator();
+    auto switch_allocator = m_router->getSwitchAllocator(); //What's this for?
     std::vector<int> out_ports;
 
     for (int i = 0; i < dor_position; i++) {
@@ -401,6 +433,235 @@ RoutingUnit::outportComputeCustom_dor(RouteInfo route,
     DPRINTF(RubyResourceStalls, "Use Dor port:%d outport_dirn %s\n", dor_port, dorport_dirn);
 
     return std::make_pair(dor_port, Dor);
+}
+
+std::pair<int, Dor_type>
+RoutingUnit::outportComputeCustom_random_dimension(RouteInfo route,
+                                 int inport,
+                                 PortDirection inport_dirn, int invc)
+{
+
+    int my_id = m_router->get_id();
+    int dest_id = route.dest_router;
+    // int length = log2(m_router->get_net_ptr()->getNumRouters());
+
+    int difference = dest_id ^ my_id;
+    int dor_position = 31 - __builtin_clz(difference);
+
+    int dor = 1 << dor_position;
+
+    bool is_dest_greater = (dest_id & dor) != 0;
+
+    PortDirection dorport_dirn = "msb " + std::to_string(dor_position);
+    int dor_port = m_outports_dirn2idx[dorport_dirn];
+
+    int outport;
+    Dor_type Dor;
+
+    auto switch_allocator = m_router->getSwitchAllocator();
+    std::vector<int> out_ports;
+    std::vector<int> vacant_out_ports;
+
+    for (int i = 0; i <= dor_position; i++) {
+
+            //the ith bit must be different of source and destination
+            if ((difference & (1 << i)) == 0) {
+                continue;
+            }
+
+            outport = m_outports_dirn2idx["msb " + std::to_string(i)];
+
+            DPRINTF(RubyResourceStalls, "Insert port to list for use %d corresponding bit %d\n", outport, i);
+            Dor = COMMON_;
+            if (switch_allocator->send_allowed_dor(inport, invc, outport, -1, Dor) && (outport != 0) && !get_outport_used(outport)){ // 不判断是否用了
+                vacant_out_ports.push_back(outport);
+            }
+            out_ports.push_back(outport);
+    }
+    assert(out_ports.size() != 0);
+    if (vacant_out_ports.size() != 0) {
+        //randomly choose one of the available ports
+        outport = vacant_out_ports[rand() % vacant_out_ports.size()];
+        Dor = COMMON_;
+
+        // std::cout<<"dest&my: "<<dest_id<<' '<<my_id<<std::endl;
+        // std::cout<<"out_ports: ";for(int i=0;i<out_ports.size();i++)std::cout<<out_ports[i]<<' ';puts("");
+        // std::cout<<"outport"<<' '<<outport<<std::endl;
+        DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
+        set_outport_used(outport, true);
+        return std::make_pair(outport, Dor);
+    }
+    else{
+        outport = out_ports[rand() % out_ports.size()];
+        Dor = COMMON_;
+        DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
+        set_outport_used(outport, true);
+        return std::make_pair(outport, Dor);
+    }
+}
+
+std::pair<int, Dor_type>
+RoutingUnit::outportComputeCustom_trivial_dor(RouteInfo route,
+                                 int inport,
+                                 PortDirection inport_dirn, int invc)
+{
+
+
+    int my_id = m_router->get_id();
+    int dest_id = route.dest_router;
+    // int length = log2(m_router->get_net_ptr()->getNumRouters());
+
+    int difference = dest_id ^ my_id;
+    int dor_position = 31 - __builtin_clz(difference);
+
+    int dor = 1 << dor_position;
+
+    bool is_dest_greater = (dest_id & dor) != 0;
+
+    PortDirection dorport_dirn = "msb " + std::to_string(dor_position);
+    int dor_port = m_outports_dirn2idx[dorport_dirn];
+
+    // int outport;
+    Dor_type Dor;
+
+    // auto switch_allocator = m_router->getSwitchAllocator();
+    // std::vector<int> out_ports;
+
+    // for (int i = 0; i < dor_position; i++) {
+
+    //         //the ith bit must be different of source and destination
+    //         if ((difference & (1 << i)) == 0) {
+    //             continue;
+    //         }
+
+    //         outport = m_outports_dirn2idx["msb " + std::to_string(i)];
+    //         //print the key and value of map of m_outports_dirn2idx
+    //         // for (auto it = m_outports_dirn2idx.begin(); it != m_outports_dirn2idx.end(); ++it) {
+    //         //     DPRINTF(RubyResourceStalls, "Router %d Listmap: outport %s %d\n", my_id, it->first, it->second);
+    //         // }
+
+    //         DPRINTF(RubyResourceStalls, "Insert port to list for use %d corresponding bit %d\n", outport, i);
+    //         Dor = COMMON_;
+    //         if (switch_allocator->send_allowed_dor(inport, invc, outport, -1, Dor) && (outport != 0) && !get_outport_used(outport)){
+    //             out_ports.push_back(outport);
+    //         }
+    // }
+
+    // if (out_ports.size() != 0) {
+    //     //randomly choose one of the available ports
+    //     outport = out_ports[rand() % out_ports.size()];
+    //     Dor = COMMON_;
+
+    //     DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
+
+
+    //     // if (outvc != -1){
+    //     //     // decrement credit in outvc
+    //     //     OutputUnit* output_unit = m_router->getOutputUnit(outport);
+    //     //     if (!output_unit->is_vc_used(outvc)) {
+    //     //         output_unit->set_vc_used(outvc, true);
+    //     //         return std::make_pair(outport, Dor);
+    //     //     }
+    //     // }
+    //     set_outport_used(outport, true);
+    //     return std::make_pair(outport, Dor);
+    // }
+
+    if (is_dest_greater) {
+        Dor = STARPLUS_;
+    } else {
+        Dor = STARMINUS_;
+    }
+
+    DPRINTF(RubyResourceStalls, "Use Dor port:%d outport_dirn %s\n", dor_port, dorport_dirn);
+
+    return std::make_pair(dor_port, Dor);
+}
+
+std::pair<int, std::pair<Star_type,bool > >// outport, Star, is_wrap //need to modify others
+RoutingUnit::outportComputeStarChannel_star(RouteInfo route,
+                                 int inport,
+                                 PortDirection inport_dirn, int invc)
+{
+    // puts("111111111111111111111");
+    int my_id = m_router->get_id();
+    int dest_id = route.dest_router;
+    int num_dim = m_router->get_net_ptr()->getNumDim();
+    int num_ary = m_router->get_net_ptr()->getNumAry();
+
+    std::vector<int> dir; // minimal direction for dim i. +1: plus. -1: minus; 0: no difference
+    std::vector<int> pw;
+    std::vector<int> digit_my, digit_dest;
+    std::vector<bool> is_wrap; // if it's wrap-around on the i-th dimension 
+    // std::cout<<"num_ary"<<num_ary<<std::endl;
+    pw.push_back(1);for(int i=1;i<num_dim;i++)pw.push_back(pw.back()*num_ary);
+    for(int i=0;i<num_dim;i++)digit_my.push_back(my_id/pw[i]%num_ary);
+    for(int i=0;i<num_dim;i++)digit_dest.push_back(dest_id/pw[i]%num_ary);
+    int most_sig_diff_bit = -1;
+    for(int i=0;i<num_dim;i++){
+        bool flg_is_wrap = false;
+        if(digit_my[i]<digit_dest[i]){
+            if(digit_dest[i]-digit_my[i]<=num_ary/2){
+                dir.push_back(1);
+            }else{
+                dir.push_back(-1);
+                if(digit_my[i]==0)flg_is_wrap = true;
+            } 
+            most_sig_diff_bit = i;
+        }
+        else if(digit_my[i]>digit_dest[i]){
+            if(digit_my[i]-digit_dest[i]<=num_ary/2){
+                dir.push_back(-1);
+            }else{
+                dir.push_back(1);
+                if(digit_my[i]==num_ary-1)flg_is_wrap = true;
+            }
+            most_sig_diff_bit = i;
+        } else dir.push_back(0); //==
+        is_wrap.push_back(flg_is_wrap);
+    }
+    // puts("222222222222");
+    // std::cout<<my_id<<' '<<dest_id<<std::endl;
+    // for(int i=0;i<num_dim;i++)std::cout<<digit_my[i]<<' ';puts("");
+    // for(int i=0;i<num_dim;i++)std::cout<<digit_dest[i]<<' ';puts("");
+    assert(most_sig_diff_bit>=0);
+    // puts("3333333333333");
+
+    auto switch_allocator = m_router->getSwitchAllocator(); //What's this for?
+    std::vector<int> vacant_nonstar_outports;
+    std::vector<bool> vno_iswrap;
+    for(int i = 0; i < num_dim; i++){
+        if(digit_my[i] == digit_dest[i])continue;
+        int outport = (dir[i] == 1) ? m_outports_dirn2idx["plus " + std::to_string(i)] : m_outports_dirn2idx["minus " + std::to_string(i)];
+        DPRINTF(RubyResourceStalls, "Insert port to list for use %d corresponding bit %d\n", outport, i);
+        if (switch_allocator->send_allowed_star(inport, invc, outport, -1, Star_type:: NONSTAR_) && (outport != 0) && !get_outport_used(outport)){
+                vacant_nonstar_outports.push_back(outport);
+                vno_iswrap.push_back(is_wrap[i]);
+            }
+    }
+    // puts("44444444444444444");
+    if (vacant_nonstar_outports.size() != 0){
+        // puts("AAAAAAAAAAAAAA");
+        int idx = rand() % vacant_nonstar_outports.size();
+        int outport = vacant_nonstar_outports[idx];
+        bool is_wrap = vno_iswrap[idx];
+        Star_type Star = NONSTAR_;
+        DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
+        set_outport_used(outport, true);
+        // puts("22222222222222222222222222");
+        return std::make_pair(outport,std::make_pair(Star,is_wrap));
+    }else{//star channel;
+        // puts("BBBBBBBBBBBBBBBBBBBBBB");
+        int i = most_sig_diff_bit;
+        int outport = (dir[i] == 1) ? m_outports_dirn2idx["plus " + std::to_string(i)] : m_outports_dirn2idx["minus " + std::to_string(i)];
+        bool have_wrapped = (route.have_wrapped.find(i) != route.have_wrapped.end());
+        Star_type Star = (have_wrapped | is_wrap[i]) ? STAR1_ : STAR0_;
+        DPRINTF(RubyResourceStalls, "Use Dor port:%d outport_dim %s\n", outport, i);
+        
+        // puts("22222222222222222222222222");
+        return std::make_pair(outport,std::make_pair(Star,is_wrap[i]));
+    }
+    // puts("22222222222222222222222222");
 }
 
 } // namespace garnet

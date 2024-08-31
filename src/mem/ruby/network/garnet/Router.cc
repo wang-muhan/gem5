@@ -170,6 +170,12 @@ Router::route_compute_dor(RouteInfo route, int inport, PortDirection inport_dirn
     return routingUnit.outportCompute_dor(route, inport, inport_dirn, vc);
 }
 
+std::pair<int, std::pair<Star_type, bool> >
+Router::route_compute_star(RouteInfo route, int inport, PortDirection inport_dirn, int vc)
+{
+    return routingUnit.outportCompute_star(route, inport, inport_dirn, vc);
+}
+
 void
 Router::grant_switch(int inport, flit *t_flit)
 {

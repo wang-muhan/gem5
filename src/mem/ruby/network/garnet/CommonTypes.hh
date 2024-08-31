@@ -32,6 +32,7 @@
 #define __MEM_RUBY_NETWORK_GARNET_0_COMMONTYPES_HH__
 
 #include "mem/ruby/common/NetDest.hh"
+#include <set>
 
 namespace gem5
 {
@@ -50,9 +51,31 @@ enum VC_state_type {IDLE_, VC_AB_, ACTIVE_, NUM_VC_STATE_TYPE_};
 enum VNET_type {CTRL_VNET_, DATA_VNET_, NULL_VNET_, NUM_VNET_TYPE_};
 enum flit_stage {I_, VA_, SA_, ST_, LT_, NUM_FLIT_STAGE_};
 enum link_type { EXT_IN_, EXT_OUT_, INT_, NUM_LINK_TYPES_ };
-enum RoutingAlgorithm { TABLE_ = 0, XY_ = 1, CUSTOM_ = 2,
+enum RoutingAlgorithm { TABLE_ = 0, XY_ = 1, CUSTOM_ = 2, DOR_ = 3, RANDOM_DIMENSION_ = 4, STAR_CHANNEL_ = 5, 
                         NUM_ROUTING_ALGORITHM_};
 enum Dor_type { STARPLUS_ , STARMINUS_ , COMMON_, DEVICE_, NUM_DOR_TYPE_};
+enum Star_type {STAR0_, STAR1_, NONSTAR_, STARDEVICE_};
+
+// std::ostream& operator<<(std::ostream& os, Star_type star) {
+//     switch (star) {
+//         case STAR0_:
+//             os << "STAR0_";
+//             break;
+//         case STAR1_:
+//             os << "STAR1_";
+//             break;
+//         case NONSTAR_:
+//             os << "NONSTAR_";
+//             break;
+//         case STARDEVICE_:
+//             os << "STARDEVICE_";
+//             break;
+//         default:
+//             os << "Unknown";
+//             break;
+//     }
+//     return os;
+// }
 
 struct RouteInfo
 {
@@ -71,6 +94,7 @@ struct RouteInfo
     int dest_ni;
     int dest_router;
     int hops_traversed;
+    std::set<int> have_wrapped;
 };
 
 #define INFINITE_ 10000

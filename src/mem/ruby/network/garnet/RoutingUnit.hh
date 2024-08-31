@@ -60,6 +60,9 @@ class RoutingUnit
     std::pair<int, Dor_type> outportCompute_dor(RouteInfo route,
                       int inport,
                       PortDirection inport_dirn, int invc);
+    std::pair<int, std::pair< Star_type, bool > > outportCompute_star(RouteInfo route,
+                      int inport,
+                      PortDirection inport_dirn, int invc);
 
     // Topology-agnostic Routing Table based routing (default)
     void addRoute(std::vector<NetDest>& routing_table_entry);
@@ -86,6 +89,18 @@ class RoutingUnit
                              int inport,
                              PortDirection inport_dirn, int invc);
 
+    std::pair<int, Dor_type> outportComputeCustom_trivial_dor(RouteInfo route,
+                             int inport,
+                             PortDirection inport_dirn, int invc);
+
+    std::pair<int, Dor_type> outportComputeCustom_random_dimension(RouteInfo route,
+                             int inport,
+                             PortDirection inport_dirn, int invc);
+
+    std::pair<int, std::pair<Star_type, bool > > outportComputeStarChannel_star(RouteInfo route,
+                              int inport,
+                              PortDirection inport_dirn, int invc);
+
     // Returns true if vnet is present in the vector
     // of vnets or if the vector supports all vnets.
     bool supportsVnet(int vnet, std::vector<int> sVnets);
@@ -100,7 +115,12 @@ class RoutingUnit
       }
         return m_outport_used[outport];
     }
-
+  public:
+    // Inport and Outport direction to idx maps
+    std::map<PortDirection, int> m_inports_dirn2idx;
+    std::map<int, PortDirection> m_inports_idx2dirn;
+    std::map<int, PortDirection> m_outports_idx2dirn;
+    std::map<PortDirection, int> m_outports_dirn2idx;
   private:
     Router *m_router;
 
@@ -108,11 +128,6 @@ class RoutingUnit
     std::vector<std::vector<NetDest>> m_routing_table;
     std::vector<int> m_weight_table;
 
-    // Inport and Outport direction to idx maps
-    std::map<PortDirection, int> m_inports_dirn2idx;
-    std::map<int, PortDirection> m_inports_idx2dirn;
-    std::map<int, PortDirection> m_outports_idx2dirn;
-    std::map<PortDirection, int> m_outports_dirn2idx;
 
     //modified
     std::map<int, bool>  m_outport_used;
