@@ -273,6 +273,7 @@ class NetworkInterface : public ClockedObject, public Consumer
     const NodeID m_id;
     const int m_virtual_networks;
     int m_vc_per_vnet;
+    int m_num_star_channel;
     std::vector<int> m_vc_allocator;
     std::vector<OutputPort *> outPorts;
     std::vector<InputPort *> inPorts;

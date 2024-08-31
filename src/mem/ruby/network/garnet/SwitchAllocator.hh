@@ -90,6 +90,7 @@ class SwitchAllocator : public Consumer
   private:
     int m_num_inports, m_num_outports;
     int m_num_vcs, m_vc_per_vnet;
+    int m_num_star_channel;
 
     double m_input_arbiter_activity, m_output_arbiter_activity;
 

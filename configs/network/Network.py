@@ -100,6 +100,13 @@ def define_options(parser):
             inside garnet network.""",
     )
     parser.add_argument(
+        "--num-star-channel",
+        action="store",
+        type=int,
+        default=1,
+        help="""number of star channels for hypercube""",
+    )
+    parser.add_argument(
         "--routing-algorithm",
         action="store",
         type=int,
@@ -180,6 +187,7 @@ def init_network(options, network, InterfaceClass):
         network.num_dim = options.num_dim
         network.num_ary = options.num_ary
         network.vcs_per_vnet = options.vcs_per_vnet
+        network.num_star_channel = options.num_star_channel
         network.ni_flit_size = options.link_width_bits / 8
         network.routing_algorithm = options.routing_algorithm
         network.garnet_deadlock_threshold = options.garnet_deadlock_threshold

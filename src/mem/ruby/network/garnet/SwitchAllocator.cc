@@ -52,6 +52,7 @@ SwitchAllocator::SwitchAllocator(Router *router)
     m_router = router;
     m_num_vcs = m_router->get_num_vcs();
     m_vc_per_vnet = m_router->get_vc_per_vnet();
+    m_num_star_channel = m_router->get_num_star_channel();
 
     m_input_arbiter_activity = 0;
     m_output_arbiter_activity = 0;
@@ -738,7 +739,8 @@ SwitchAllocator::send_allowed_dor(int inport, int invc, int outport, int outvc, 
                 }
                 break;
             case Dor_type::COMMON_:
-                for (int vc_offset = 1; vc_offset < m_vc_per_vnet; vc_offset++) {
+                // for (int vc_offset = 1; vc_offset < m_vc_per_vnet; vc_offset++) {
+                for (int vc_offset = m_num_star_channel; vc_offset < m_vc_per_vnet; vc_offset++) {
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&
@@ -814,7 +816,7 @@ SwitchAllocator::send_allowed_star(int inport, int invc, int outport, int outvc,
         assert(m_vc_per_vnet>=2);
         switch(star){
             case Star_type::STAR0_:
-                for (int vc_offset = 0; vc_offset < 1; vc_offset++) {
+                for (int vc_offset = 0; vc_offset < m_num_star_channel; vc_offset++) {
                     // if (vc_offset == 1) continue;
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
@@ -825,7 +827,7 @@ SwitchAllocator::send_allowed_star(int inport, int invc, int outport, int outvc,
                 }
                 break;
             case Star_type::STAR1_:
-                for (int vc_offset = 1; vc_offset < 2; vc_offset++) {
+                for (int vc_offset = m_num_star_channel; vc_offset < 2*m_num_star_channel; vc_offset++) {
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&
@@ -835,7 +837,7 @@ SwitchAllocator::send_allowed_star(int inport, int invc, int outport, int outvc,
                 }
                 break;
             case Star_type::NONSTAR_:
-                for (int vc_offset = 2; vc_offset < m_vc_per_vnet; vc_offset++) {
+                for (int vc_offset = 2*m_num_star_channel; vc_offset < m_vc_per_vnet; vc_offset++) {
                     int temp_vc = vc_base + vc_offset;
                     if (input_unit->need_stage(temp_vc, SA_, curTick()) &&
                     (input_unit->get_outport(temp_vc) == outport) &&

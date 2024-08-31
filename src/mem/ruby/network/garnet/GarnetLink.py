@@ -45,6 +45,7 @@ class NetworkLink(ClockedObject):
     vcs_per_vnet = Param.Int(
         Parent.vcs_per_vnet, "virtual channels per virtual network"
     )
+    num_star_channel = Param.Int(Parent.num_star_channel, "number of star channels")
     virt_nets = Param.Int(
         Parent.number_of_virtual_networks, "number of virtual networks"
     )

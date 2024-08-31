@@ -51,6 +51,7 @@ OutputUnit::OutputUnit(int id, PortDirection direction, Router *router,
   : Consumer(router), m_router(router), m_id(id), m_direction(direction),
     m_vc_per_vnet(consumerVcs)
 {
+    m_num_star_channel = m_router->get_num_star_channel();//希望是对的。
     const int m_num_vcs = consumerVcs * m_router->get_num_vnets();
     outVcState.reserve(m_num_vcs);
     for (int i = 0; i < m_num_vcs; i++) {
@@ -131,7 +132,8 @@ OutputUnit::has_free_vc_dor(int vnet, Dor_type dor)
             break;
 
         case Dor_type::COMMON_:
-            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            // for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+m_num_star_channel; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
@@ -161,21 +163,21 @@ OutputUnit::has_free_vc_star(int vnet, Star_type star)
     
     switch(star){
         case Star_type::STAR0_:
-            for (int vc = vc_base; vc < vc_base+1; vc++) {
+            for (int vc = vc_base; vc < vc_base+m_num_star_channel; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
             break;
 
         case Star_type::STAR1_:
-            for (int vc = vc_base+1; vc < vc_base+2; vc++) {
+            for (int vc = vc_base+m_num_star_channel; vc < vc_base+2*m_num_star_channel; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
             break;
 
         case Star_type::NONSTAR_:
-            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+2*m_num_star_channel; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick()))
                     return true;
             }
@@ -236,7 +238,8 @@ OutputUnit::select_free_vc_dor(int vnet, Dor_type dor)
             break;
 
         case Dor_type::COMMON_:
-            for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            // for (int vc = vc_base+1; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+m_num_star_channel; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;
@@ -268,7 +271,7 @@ OutputUnit::select_free_vc_star(int vnet, Star_type star)
     // Vc0 for starplus, vc1 for starminus, vc3-vcn for all, arbitary for device
     switch(star){
         case Star_type::STAR0_:
-            for (int vc = vc_base; vc < vc_base+1; vc++) {
+            for (int vc = vc_base; vc < vc_base+m_num_star_channel; vc++) {
                 // if (vc == vc_base+1) continue;
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
@@ -278,7 +281,7 @@ OutputUnit::select_free_vc_star(int vnet, Star_type star)
             break;
 
         case Star_type::STAR1_:
-            for (int vc = vc_base+1; vc < vc_base+2; vc++) {
+            for (int vc = vc_base+m_num_star_channel; vc < vc_base+2*m_num_star_channel; vc++) {
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;
@@ -287,7 +290,7 @@ OutputUnit::select_free_vc_star(int vnet, Star_type star)
             break;
 
         case Star_type::NONSTAR_:
-            for (int vc = vc_base+2; vc < vc_base + m_vc_per_vnet; vc++) {
+            for (int vc = vc_base+2*m_num_star_channel; vc < vc_base + m_vc_per_vnet; vc++) {
                 if (is_vc_idle(vc, curTick())) {
                     outVcState[vc].setState(ACTIVE_, curTick());
                     return vc;

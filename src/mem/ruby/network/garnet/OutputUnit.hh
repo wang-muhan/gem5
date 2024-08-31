@@ -127,6 +127,7 @@ class OutputUnit : public Consumer
     GEM5_CLASS_VAR_USED int m_id;
     PortDirection m_direction;
     int m_vc_per_vnet;
+    int m_num_star_channel;
     NetworkLink *m_out_link;
     CreditLink *m_credit_link;
 

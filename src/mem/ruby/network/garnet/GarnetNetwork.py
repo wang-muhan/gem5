@@ -45,6 +45,7 @@ class GarnetNetwork(RubyNetwork):
     num_rows = Param.Int(0, "number of rows if 2D (mesh/torus/..) topology")
     ni_flit_size = Param.UInt32(16, "network interface flit size in bytes")
     vcs_per_vnet = Param.UInt32(4, "virtual channels per virtual network")
+    num_star_channel = Param.UInt32(1, "num star channel for hypercube")
     buffers_per_data_vc = Param.UInt32(4, "buffers per data virtual channel")
     buffers_per_ctrl_vc = Param.UInt32(1, "buffers per ctrl virtual channel")
     routing_algorithm = Param.Int(0, "0: Weight-based Table, 1: XY, 2: Custom")
@@ -64,6 +65,9 @@ class GarnetNetworkInterface(ClockedObject):
     vcs_per_vnet = Param.UInt32(
         Parent.vcs_per_vnet, "virtual channels per virtual network"
     )
+    num_star_channel = Param.UInt32(
+        Parent.num_star_channel, "num star channel for hypercube"
+    )
     virt_nets = Param.UInt32(
         Parent.number_of_virtual_networks, "number of virtual networks"
     )
@@ -78,6 +82,9 @@ class GarnetRouter(BasicRouter):
     cxx_header = "mem/ruby/network/garnet/Router.hh"
     vcs_per_vnet = Param.UInt32(
         Parent.vcs_per_vnet, "virtual channels per virtual network"
+    )
+    num_star_channel = Param.UInt32(
+        Parent.num_star_channel, "num star channel for hypercube"
     )
     virt_nets = Param.UInt32(
         Parent.number_of_virtual_networks, "number of virtual networks"
