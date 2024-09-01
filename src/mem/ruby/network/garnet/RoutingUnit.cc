@@ -410,15 +410,6 @@ RoutingUnit::outportComputeCustom_dor(RouteInfo route,
 
         DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
 
-
-        // if (outvc != -1){
-        //     // decrement credit in outvc
-        //     OutputUnit* output_unit = m_router->getOutputUnit(outport);
-        //     if (!output_unit->is_vc_used(outvc)) {
-        //         output_unit->set_vc_used(outvc, true);
-        //         return std::make_pair(outport, Dor);
-        //     }
-        // }
         set_outport_used(outport, true);
         return std::make_pair(outport, Dor);
     }
@@ -484,9 +475,6 @@ RoutingUnit::outportComputeCustom_random_dimension(RouteInfo route,
         outport = vacant_out_ports[rand() % vacant_out_ports.size()];
         Dor = COMMON_;
 
-        // std::cout<<"dest&my: "<<dest_id<<' '<<my_id<<std::endl;
-        // std::cout<<"out_ports: ";for(int i=0;i<out_ports.size();i++)std::cout<<out_ports[i]<<' ';puts("");
-        // std::cout<<"outport"<<' '<<outport<<std::endl;
         DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
         set_outport_used(outport, true);
         return std::make_pair(outport, Dor);
@@ -524,49 +512,6 @@ RoutingUnit::outportComputeCustom_trivial_dor(RouteInfo route,
     // int outport;
     Dor_type Dor;
 
-    // auto switch_allocator = m_router->getSwitchAllocator();
-    // std::vector<int> out_ports;
-
-    // for (int i = 0; i < dor_position; i++) {
-
-    //         //the ith bit must be different of source and destination
-    //         if ((difference & (1 << i)) == 0) {
-    //             continue;
-    //         }
-
-    //         outport = m_outports_dirn2idx["msb " + std::to_string(i)];
-    //         //print the key and value of map of m_outports_dirn2idx
-    //         // for (auto it = m_outports_dirn2idx.begin(); it != m_outports_dirn2idx.end(); ++it) {
-    //         //     DPRINTF(RubyResourceStalls, "Router %d Listmap: outport %s %d\n", my_id, it->first, it->second);
-    //         // }
-
-    //         DPRINTF(RubyResourceStalls, "Insert port to list for use %d corresponding bit %d\n", outport, i);
-    //         Dor = COMMON_;
-    //         if (switch_allocator->send_allowed_dor(inport, invc, outport, -1, Dor) && (outport != 0) && !get_outport_used(outport)){
-    //             out_ports.push_back(outport);
-    //         }
-    // }
-
-    // if (out_ports.size() != 0) {
-    //     //randomly choose one of the available ports
-    //     outport = out_ports[rand() % out_ports.size()];
-    //     Dor = COMMON_;
-
-    //     DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
-
-
-    //     // if (outvc != -1){
-    //     //     // decrement credit in outvc
-    //     //     OutputUnit* output_unit = m_router->getOutputUnit(outport);
-    //     //     if (!output_unit->is_vc_used(outvc)) {
-    //     //         output_unit->set_vc_used(outvc, true);
-    //     //         return std::make_pair(outport, Dor);
-    //     //     }
-    //     // }
-    //     set_outport_used(outport, true);
-    //     return std::make_pair(outport, Dor);
-    // }
-
     if (is_dest_greater) {
         Dor = STARPLUS_;
     } else {
@@ -583,7 +528,6 @@ RoutingUnit::outportComputeStarChannel_star(RouteInfo route,
                                  int inport,
                                  PortDirection inport_dirn, int invc)
 {
-    // puts("111111111111111111111");
     int my_id = m_router->get_id();
     int dest_id = route.dest_router;
     int num_dim = m_router->get_net_ptr()->getNumDim();
@@ -593,7 +537,6 @@ RoutingUnit::outportComputeStarChannel_star(RouteInfo route,
     std::vector<int> pw;
     std::vector<int> digit_my, digit_dest;
     std::vector<bool> is_wrap; // if it's wrap-around on the i-th dimension 
-    // std::cout<<"num_ary"<<num_ary<<std::endl;
     pw.push_back(1);for(int i=1;i<num_dim;i++)pw.push_back(pw.back()*num_ary);
     for(int i=0;i<num_dim;i++)digit_my.push_back(my_id/pw[i]%num_ary);
     for(int i=0;i<num_dim;i++)digit_dest.push_back(dest_id/pw[i]%num_ary);
@@ -620,12 +563,7 @@ RoutingUnit::outportComputeStarChannel_star(RouteInfo route,
         } else dir.push_back(0); //==
         is_wrap.push_back(flg_is_wrap);
     }
-    // puts("222222222222");
-    // std::cout<<my_id<<' '<<dest_id<<std::endl;
-    // for(int i=0;i<num_dim;i++)std::cout<<digit_my[i]<<' ';puts("");
-    // for(int i=0;i<num_dim;i++)std::cout<<digit_dest[i]<<' ';puts("");
     assert(most_sig_diff_bit>=0);
-    // puts("3333333333333");
 
     auto switch_allocator = m_router->getSwitchAllocator(); //What's this for?
     std::vector<int> vacant_nonstar_outports;
@@ -639,29 +577,23 @@ RoutingUnit::outportComputeStarChannel_star(RouteInfo route,
                 vno_iswrap.push_back(is_wrap[i]);
             }
     }
-    // puts("44444444444444444");
     if (vacant_nonstar_outports.size() != 0){
-        // puts("AAAAAAAAAAAAAA");
         int idx = rand() % vacant_nonstar_outports.size();
         int outport = vacant_nonstar_outports[idx];
         bool is_wrap = vno_iswrap[idx];
         Star_type Star = NONSTAR_;
         DPRINTF(RubyResourceStalls, "Use adaptive routing: Router %d: outport %d\n", my_id, outport);
         set_outport_used(outport, true);
-        // puts("22222222222222222222222222");
         return std::make_pair(outport,std::make_pair(Star,is_wrap));
     }else{//star channel;
-        // puts("BBBBBBBBBBBBBBBBBBBBBB");
         int i = most_sig_diff_bit;
         int outport = (dir[i] == 1) ? m_outports_dirn2idx["plus " + std::to_string(i)] : m_outports_dirn2idx["minus " + std::to_string(i)];
         bool have_wrapped = (route.have_wrapped.find(i) != route.have_wrapped.end());
         Star_type Star = (have_wrapped | is_wrap[i]) ? STAR1_ : STAR0_;
         DPRINTF(RubyResourceStalls, "Use Dor port:%d outport_dim %s\n", outport, i);
         
-        // puts("22222222222222222222222222");
         return std::make_pair(outport,std::make_pair(Star,is_wrap[i]));
     }
-    // puts("22222222222222222222222222");
 }
 
 } // namespace garnet

@@ -13,7 +13,7 @@ num_cpus = [4, 16, 64, 256]
 inj_rates = [0.1, 0.2, 0.3,0.4,0.5,0.6,0.7,0.8,0.9,1.0]
 latency = ({},{},{})
 
-path = "Experiment/Experiment1/result_new_hypercube_new.txt"
+path = "Experiment/New_Experiment/Additional/result.txt"
 with open(path, 'r') as file:
     lines = file.readlines()
     cnt = 0
@@ -29,8 +29,6 @@ with open(path, 'r') as file:
                 print(latency[0][(synthetic,num_cpu,inj_rate)])
                 cnt+=1
 
-path = "Experiment/Experiment1/result_new_mesh.txt"
-with open(path, 'r') as file:
     lines = file.readlines()
     cnt = 0
     for synthetic in synthetics:
@@ -44,40 +42,6 @@ with open(path, 'r') as file:
                 print(latency[1][(synthetic,num_cpu,inj_rate)])
                 cnt+=1
 
-
-# fig, axs = plt.subplots(8, 3, figsize=(18, 18))
-# fig.subplots_adjust(hspace=0.8, wspace=0.4)
-
-# lines = []
-# labels = []
-# num_cpus = [16,64,256] # 4不要了
-
-# # 遍历synthetics和num_cpus来填充每个小图
-# for i, synthetic in enumerate(synthetics):
-#     for j, num_cpu in enumerate(num_cpus):
-#         ax = axs[i, j]  # 选择正确的子图
-#         for method in range(2):
-#             latencies = [latency[method].get((synthetic, num_cpu, inj_rate), None) for inj_rate in inj_rates]
-#             line, = ax.plot(inj_rates, latencies, marker='o', label=f'Method {method}')
-#             # 只在第一个子图时记录句柄和标签
-#             if i == 0 and j == 1:
-#                 lines.append(line)
-#                 if method == 0:
-#                     label = "Hypercube_*-channel"
-#                 elif method == 1:
-#                     label = "Mesh_XY"
-#                 labels.append(label)
-        
-#         ax.set_title(f'{synthetic}, CPU={num_cpu}')
-#         ax.set_xlabel('Injection Rate')
-#         ax.set_ylabel('Latency')
-
-# # 在整个图中添加一个全局图例，并将图例放在图像之外
-# fig.legend(lines, labels, loc='upper center', bbox_to_anchor=(0.5, 0.07), ncol=2)
-
-# # 显示图像
-# plt.show()
-# plt.savefig("Experiment/Experiment1/figs/new.png", bbox_inches='tight')
 
 import matplotlib.pyplot as plt
 import matplotlib.gridspec as gridspec
@@ -130,14 +94,10 @@ for i, synthetic in enumerate(synthetics[4:]):
 # 在整个图中添加一个全局图例，并将图例放在图像下方
 fig.legend(lines, labels, loc='upper center', bbox_to_anchor=(0.5, 0.07), ncol=2)
 
-# # 在中间绘制虚线分割
-# fig.text(0.5, 0.5, '', ha='center', va='center')
-# plt.axvline(x=0.495, color='black', linestyle='--', linewidth=2, transform=fig.transFigure, clip_on=False)
-
 # 手动绘制虚线分割线
 line = mlines.Line2D([0.5, 0.5], [0.1, 0.9], color='black', linestyle='--', linewidth=2, transform=fig.transFigure, clip_on=False)
 fig.add_artist(line)
 
 # 显示图像
 plt.show()
-plt.savefig("Experiment/Experiment1/figs/new.png", bbox_inches='tight')
+plt.savefig("Experiment/New_Experiment/Experiment1/figs/additional.png", bbox_inches='tight')
