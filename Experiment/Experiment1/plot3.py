@@ -4,7 +4,7 @@ import re
 def extract_latency(line):
     match = re.search(r'average_packet_latency\s*=\s*([\d\.]+)', line)
     if match:
-        return float(match.group(1))/2
+        return float(match.group(1))/1000
     else:
         return None
 

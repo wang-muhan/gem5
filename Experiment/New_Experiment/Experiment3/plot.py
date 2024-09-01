@@ -53,7 +53,7 @@ with open(path, 'r') as file:
                 cnt+=1
 
 
-path = "Experiment/New_Experiment/Experiment2/result2.txt" # 8^2
+path = "Experiment/New_Experiment/Experiment3/result3.txt" # 8^2
 num_cpu=64
 with open(path, 'r') as file:
     lines = file.readlines()
@@ -102,4 +102,4 @@ fig.legend(lines, labels, loc='upper center', bbox_to_anchor=(0.5, 0.05), ncol=3
 
 # 显示图像
 plt.show()
-plt.savefig("Experiment/New_Experiment/Experiment2/figs/ex2.png")
+plt.savefig("Experiment/New_Experiment/Experiment3/figs/ex3.png")
